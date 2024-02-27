@@ -1,0 +1,40 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  & .navlinks {
+    display: flex;
+    gap: 3rem;
+    background-color: $gray-color-1;
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+  }
+  & .actionsBtns {
+    display: flex;
+    align-items: center;
+    & .mdi-shopping {
+      position: relative;
+      font-size: 2.5rem;
+      margin-right: 1rem;
+      cursor: pointer;
+      & i {
+        font-style: normal;
+        font-size: 1.2rem;
+        position: absolute;
+        top: -6px;
+        left: 15px;
+      }
+    }
+    & .ctaBtn {
+      font-weight: bold;
+      font-size: 1.5rem;
+      background-color: $black-color;
+      color: $white-color;
+      cursor: pointer;
+      padding: 1rem 2rem;
+    }
+  }
+}

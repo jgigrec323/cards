@@ -1,0 +1,636 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&family=Silkscreen:wght@400;700&display=swap");
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit; }
+
+html {
+  font-size: 62.5%;
+  font-family: "Roboto", sans-serif;
+  scroll-behavior: smooth; }
+
+body {
+  position: relative;
+  overflow-x: hidden; }
+
+.main {
+  padding: 0 2rem; }
+
+a {
+  color: currentColor;
+  text-decoration: none; }
+
+ul {
+  list-style: none; }
+
+.Btn {
+  border-radius: 2rem;
+  outline: none;
+  border: none;
+  padding: 0 2rem;
+  cursor: pointer; }
+
+.titre {
+  font-size: 8rem;
+  text-align: center;
+  margin: 5rem auto; }
+
+.copyright {
+  text-align: center;
+  margin-bottom: 1rem; }
+
+.slide-in {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #000;
+  transform-origin: left; }
+
+.slide-out {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #000;
+  transform-origin: right; }
+
+.mouse {
+  width: 50px;
+  height: 75px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 1000;
+  transform-origin: center;
+  transition: scale 0.3s ease;
+  background-color: black;
+  display: none;
+  justify-content: center;
+  align-items: center; }
+  .mouse .clickToCommand {
+    rotate: 270deg;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1rem; }
+
+.Toastify__toast-body {
+  font-size: 1.5rem;
+  font-weight: bold; }
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3rem;
+  font-size: 1.5rem;
+  font-weight: bold; }
+  nav .navlinks {
+    display: flex;
+    gap: 3rem;
+    background-color: #f3f3f3;
+    padding: 1rem 2rem;
+    border-radius: 2rem; }
+  nav .actionsBtns {
+    display: flex;
+    align-items: center; }
+    nav .actionsBtns .mdi-shopping {
+      position: relative;
+      font-size: 2.5rem;
+      margin-right: 1rem;
+      cursor: pointer; }
+      nav .actionsBtns .mdi-shopping i {
+        font-style: normal;
+        font-size: 1.2rem;
+        position: absolute;
+        top: -6px;
+        left: 15px; }
+    nav .actionsBtns .ctaBtn {
+      font-weight: bold;
+      font-size: 1.5rem;
+      background-color: #000;
+      color: #fff;
+      cursor: pointer;
+      padding: 1rem 2rem; }
+
+section.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 6rem - 3.84rem); }
+  section.hero .mainText {
+    font-size: 8rem;
+    font-weight: 900;
+    text-align: center;
+    margin-top: -5rem; }
+  section.hero .secondaryText {
+    margin-top: 2rem;
+    font-size: 3rem; }
+
+section.infoSection {
+  height: 100vh;
+  width: 100%;
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
+  font-size: 5rem;
+  padding: 0 5rem;
+  border-radius: 2rem; }
+  section.infoSection .infoSectionText {
+    width: 72%;
+    font-weight: 700; }
+
+.cards {
+  position: relative; }
+  .cards section.card {
+    height: 100vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center; }
+    .cards section.card .left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 3rem; }
+      .cards section.card .left .cardName {
+        font-size: 15rem;
+        font-weight: bold; }
+      .cards section.card .left a {
+        font-weight: bold; }
+    .cards section.card .card {
+      width: 300px;
+      height: 450px;
+      border-radius: 10px; }
+  .cards section.commande {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 900;
+    height: 100vh;
+    background-color: red;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center; }
+    .cards section.commande .mdi-close,
+    .cards section.commande .mdi-shopping {
+      font-size: 4rem;
+      position: absolute;
+      top: 3rem;
+      right: 10%;
+      cursor: pointer; }
+    .cards section.commande .mdi-shopping {
+      top: 3.5rem;
+      font-size: 3rem;
+      right: 14%; }
+      .cards section.commande .mdi-shopping i {
+        font-style: normal;
+        font-size: 1.2rem;
+        position: absolute;
+        top: -6px;
+        left: 20px; }
+    .cards section.commande .left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      font-size: 2.5rem; }
+      .cards section.commande .left .cardName {
+        font-size: 10rem;
+        font-weight: bold; }
+      .cards section.commande .left form {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem; }
+        .cards section.commande .left form input {
+          border: none;
+          outline: none;
+          height: 3rem;
+          padding: 0.5rem;
+          background-color: transparent;
+          border-bottom: 2px solid #000;
+          font-size: 1.6rem; }
+          .cards section.commande .left form input::placeholder {
+            font-size: 1.6rem; }
+        .cards section.commande .left form .entite {
+          font-size: 1.5rem;
+          display: flex;
+          gap: 2rem; }
+          .cards section.commande .left form .entite > div {
+            display: flex;
+            align-items: center;
+            gap: 1rem; }
+        .cards section.commande .left form textarea {
+          outline: none;
+          border: none;
+          height: 10rem;
+          background: none;
+          border-bottom: 2px solid #000;
+          font-size: 1.6rem; }
+      .cards section.commande .left button {
+        margin-top: 5rem;
+        padding: 1rem;
+        font-weight: bold;
+        font-size: 2rem;
+        width: 30rem; }
+    .cards section.commande .card {
+      width: 300px;
+      height: 450px;
+      border-radius: 10px;
+      background-color: aqua; }
+
+section.ctaSection {
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; }
+  section.ctaSection h2 {
+    font-size: 6rem;
+    margin-bottom: 2rem; }
+  section.ctaSection button {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 2rem;
+    padding: 1rem 3rem; }
+
+.productCards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 2rem; }
+  .productCards .productCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem; }
+    .productCards .productCard .top .card {
+      width: 200px;
+      height: 300px;
+      border-radius: 1rem;
+      background-color: red; }
+    .productCards .productCard .bottom > h2 {
+      margin-top: 1rem;
+      text-align: center;
+      margin: 2rem auto 1rem auto; }
+    .productCards .productCard .bottom .price {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 2rem; }
+    .productCards .productCard .bottom button {
+      font-size: 2rem;
+      padding: 1rem 2rem; }
+
+main.profilePage {
+  position: relative; }
+  main.profilePage > header {
+    width: 100%;
+    height: 40vh;
+    background-image: linear-gradient(#6243f8, #be29eb); }
+  main.profilePage .infos {
+    position: relative;
+    padding: 5rem 20rem; }
+    main.profilePage .infos .profilePic {
+      position: absolute;
+      top: -30%;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-image: url("https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D");
+      background-position: center;
+      background-size: cover;
+      border: 5px solid white; }
+      main.profilePage .infos .profilePic > span {
+        position: absolute;
+        right: 0%;
+        bottom: 15%;
+        font-size: 3rem;
+        cursor: pointer;
+        color: #000; }
+    main.profilePage .infos .infosPerso {
+      margin-top: 4rem;
+      margin-bottom: 3rem; }
+      main.profilePage .infos .infosPerso .name {
+        font-size: 4rem;
+        color: #6243f8; }
+      main.profilePage .infos .infosPerso .fonction {
+        font-size: 2rem;
+        color: #656565; }
+    main.profilePage .infos .bio {
+      font-size: 2rem;
+      margin-bottom: 5rem; }
+    main.profilePage .infos .liensSociaux {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 4rem; }
+      main.profilePage .infos .liensSociaux a {
+        font-size: 4rem; }
+    main.profilePage .infos .contacts {
+      font-size: 2rem;
+      margin-bottom: 5rem; }
+      main.profilePage .infos .contacts li span {
+        margin-right: 1rem; }
+    main.profilePage .infos .actionBnts button {
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background-color: #6243f8;
+      color: #fff; }
+      main.profilePage .infos .actionBnts button:first-child {
+        margin-right: 2rem; }
+  main.profilePage .profileFooter {
+    width: 100%;
+    height: 10vh;
+    background: #6243f8; }
+  main.profilePage .mdi-pencil {
+    display: block;
+    height: 50px;
+    width: 50px;
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    background: #000;
+    border-radius: 50%;
+    font-size: 2.5rem;
+    position: absolute;
+    top: 40%;
+    right: 5%;
+    cursor: pointer; }
+
+footer {
+  display: flex;
+  justify-content: space-evenly;
+  height: 40vh;
+  font-size: 1.8rem; }
+  footer .footerTitre {
+    margin-bottom: 2rem; }
+  footer .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 1.8rem;
+    opacity: 0.7; }
+
+main.shoppingCart {
+  padding: 5rem; }
+  main.shoppingCart > h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem; }
+  main.shoppingCart .cartItems {
+    font-size: 1.8rem; }
+    main.shoppingCart .cartItems table {
+      width: 100%;
+      border-collapse: collapse; }
+      main.shoppingCart .cartItems table thead {
+        font-size: 1.5rem; }
+        main.shoppingCart .cartItems table thead th {
+          padding: 2rem 0;
+          text-align: left;
+          border-bottom: 1px solid black; }
+          main.shoppingCart .cartItems table thead th#quantity {
+            text-align: left; }
+          main.shoppingCart .cartItems table thead th#price {
+            text-align: right; }
+      main.shoppingCart .cartItems table tr {
+        border-bottom: 1px solid black; }
+      main.shoppingCart .cartItems table td {
+        padding: 2rem 0; }
+        main.shoppingCart .cartItems table td.cardCell {
+          display: flex;
+          gap: 1rem; }
+          main.shoppingCart .cartItems table td.cardCell .card {
+            width: 75px;
+            height: 45px;
+            border-radius: 2px;
+            margin-right: 1rem; }
+          main.shoppingCart .cartItems table td.cardCell .cardName {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem; }
+          main.shoppingCart .cartItems table td.cardCell .cardWeight {
+            color: grey;
+            font-size: 1.5rem;
+            font-weight: bold; }
+        main.shoppingCart .cartItems table td.qtyCell {
+          font-size: 1.4rem; }
+          main.shoppingCart .cartItems table td.qtyCell .counter {
+            border-radius: 1rem;
+            border: 1px solid black;
+            padding: 0.4rem 1.5rem;
+            width: fit-content;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1.2rem; }
+            main.shoppingCart .cartItems table td.qtyCell .counter .decrement,
+            main.shoppingCart .cartItems table td.qtyCell .counter .increment {
+              font-size: 2rem;
+              cursor: pointer;
+              color: grey; }
+            main.shoppingCart .cartItems table td.qtyCell .counter .quantity {
+              font-size: 2rem;
+              user-select: none;
+              font-weight: bold; }
+          main.shoppingCart .cartItems table td.qtyCell .remove {
+            display: flex;
+            gap: 1rem;
+            font-weight: bold;
+            cursor: pointer; }
+        main.shoppingCart .cartItems table td.priceCell {
+          text-align: right;
+          font-size: 1.8rem;
+          font-weight: bold; }
+      main.shoppingCart .cartItems table tfoot tr {
+        border-bottom: none; }
+      main.shoppingCart .cartItems table tfoot td {
+        padding: 2.5rem 0;
+        border-bottom: none !important; }
+      main.shoppingCart .cartItems table tfoot input {
+        visibility: hidden; }
+      main.shoppingCart .cartItems table tfoot .totalCellText {
+        font-size: 2.5rem;
+        font-weight: bold; }
+      main.shoppingCart .cartItems table tfoot .totalCellPrice {
+        text-align: right;
+        font-size: 2rem;
+        font-weight: bold; }
+  main.shoppingCart .btnOrderDiv {
+    margin-top: 2rem;
+    text-align: right; }
+    main.shoppingCart .btnOrderDiv button {
+      padding: 1rem 2.5rem;
+      background-color: #000;
+      color: #fff;
+      font-size: 1.8rem; }
+  main.shoppingCart .addAnother {
+    text-align: center;
+    font-size: 1.5rem;
+    border: none;
+    outline: none;
+    padding: 1rem;
+    background-color: #000;
+    color: #fff;
+    position: fixed;
+    bottom: 5%;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    cursor: pointer; }
+
+.personnalisation {
+  padding: 5rem; }
+  .personnalisation > h1 {
+    font-size: 4rem; }
+  .personnalisation > div {
+    margin-top: 3rem;
+    text-align: center; }
+    .personnalisation > div form {
+      display: flex;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+      margin-bottom: 5rem; }
+      .personnalisation > div form > div {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        min-width: 45rem;
+        width: 40%; }
+        .personnalisation > div form > div label {
+          font-weight: bold; }
+      .personnalisation > div form input {
+        font-size: 2rem;
+        border: none;
+        outline: none;
+        border-bottom: 3px solid;
+        padding: 1rem; }
+      .personnalisation > div form textarea {
+        padding: 1rem;
+        font-size: 2rem;
+        border: none;
+        outline: none;
+        border-bottom: 3px solid black; }
+      .personnalisation > div form .fileDiv {
+        display: flex;
+        flex-direction: column;
+        font-size: 2rem;
+        align-items: flex-start; }
+      .personnalisation > div form .socialMedia {
+        font-size: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem; }
+        .personnalisation > div form .socialMedia > div {
+          display: flex;
+          align-items: center;
+          gap: 2rem; }
+          .personnalisation > div form .socialMedia > div input {
+            margin-right: 1rem; }
+    .personnalisation > div button {
+      padding: 1rem 2.5rem;
+      background-color: #000;
+      color: #fff;
+      font-size: 1.8rem; }
+
+.icon-scroll,
+.icon-scroll:before {
+  position: absolute;
+  left: 50%; }
+
+.icon-scroll {
+  width: 30px;
+  height: 50px;
+  margin-left: -20px;
+  bottom: 20px;
+  margin-top: -35px;
+  box-shadow: inset 0 0 0 1px #000;
+  border-radius: 25px; }
+
+.icon-scroll:before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: #000;
+  margin-left: -4px;
+  top: 8px;
+  border-radius: 4px;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-name: scroll; }
+
+@keyframes scroll {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: translateY(30px); } }
+
+aside.editComponent {
+  position: fixed;
+  z-index: 999;
+  background-color: #000;
+  color: #fff;
+  padding: 0 2rem;
+  width: 20vw;
+  height: 100vh;
+  right: -100%;
+  transition: right 0.5s ease-in-out;
+  overflow-y: auto;
+  /* Track */
+  /* Handle */
+  /* Handle on hover */ }
+  aside.editComponent::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+    /* No track color */ }
+  aside.editComponent::-webkit-scrollbar-track {
+    border-radius: 2px; }
+  aside.editComponent::-webkit-scrollbar-thumb {
+    background: #fff;
+    /* Black thumb */
+    border-radius: 10px; }
+  aside.editComponent::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    /* Darker black on hover */ }
+  aside.editComponent > h2 {
+    margin: 3rem auto; }
+  aside.editComponent .infosEditBtn {
+    margin-top: 2rem; }
+  aside.editComponent .mdi-close {
+    font-size: 3rem;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10%; }
+  aside.editComponent .options {
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem; }
+    aside.editComponent .options .option > div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem; }
+    aside.editComponent .options .option p.optionName {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: bold; }
+  aside.editComponent .saveBtn {
+    position: relative;
+    margin-bottom: 2rem; }
+  aside.editComponent.visible {
+    right: 0; }

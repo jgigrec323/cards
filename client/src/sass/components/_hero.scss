@@ -1,0 +1,18 @@
+section.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 6rem - 3.84rem);
+  & .mainText {
+    font-size: 8rem;
+    font-weight: 900;
+    text-align: center;
+    margin-top: -5rem;
+  }
+  & .secondaryText {
+    margin-top: 2rem;
+    font-size: 3rem;
+  }
+}

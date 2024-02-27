@@ -1,0 +1,17 @@
+section.ctaSection {
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  & h2 {
+    font-size: 6rem;
+    margin-bottom: 2rem;
+  }
+  & button {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 2rem;
+    padding: 1rem 3rem;
+  }
+}
