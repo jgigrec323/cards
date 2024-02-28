@@ -8,11 +8,13 @@ const authenticateUser = async (req, res, next) => {
   }
 
   try {
-    const user = await JWT.verify(token, process.env.JWT_SECRET);
-    req.userId = user.id;
+    const decodedToken = await JWT.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.user.id;
+    req.userId = userId;
+
     next();
   } catch (error) {
-    return res.status(400).json({ message: "Invalid token" });
+    return res.status(400).json({ message: error, status: "invalidToken" });
   }
 };
 

@@ -1,6 +1,7 @@
 // UserPerso.js
 const { DataTypes } = require("sequelize");
 const db = require("../config/database");
+const SocialMedia = require("./SocialMedia");
 
 const UserPerso = db.define(
   "UserPerso",
@@ -90,11 +91,20 @@ const UserPerso = db.define(
         key: "id",
       },
     },
+    social_media_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "SocialMedia",
+        key: "id",
+      },
+    },
   },
   {
     tableName: "userPerso",
     timestamps: false,
   }
 );
+UserPerso.belongsTo(SocialMedia, { foreignKey: "social_media_id" });
 
 module.exports = UserPerso;

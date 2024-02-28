@@ -1,6 +1,8 @@
 // Order.js
 const { DataTypes } = require("sequelize");
 const db = require("../config/database");
+const OrderSummary = require("./OrderSummary");
+const Card = require("./Card");
 
 const Order = db.define(
   "Order",
@@ -26,10 +28,9 @@ const Order = db.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    status: {
-      type: DataTypes.STRING,
+    orderSummaryId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: "pending",
     },
   },
   {
@@ -37,5 +38,6 @@ const Order = db.define(
     timestamps: false,
   }
 );
-
+Order.belongsTo(OrderSummary);
+Order.belongsTo(Card);
 module.exports = Order;

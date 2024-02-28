@@ -6,6 +6,9 @@ import Profile from "./pages/Profile";
 import { AnimatePresence } from "framer-motion";
 import ShoppingCart from "./pages/ShoppingCart";
 import Personnalisation from "./pages/Personnalisation";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 
 
 function App() {
@@ -19,6 +22,9 @@ function App() {
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/shoppingCart" element={<ShoppingCart />}></Route>
           <Route path="/personnalisation" element={<Personnalisation />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+          <Route path="/dashboard" element={<Dashboard />}></Route>
 
         </Routes>
       </AnimatePresence>

@@ -1,12 +1,12 @@
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import CartIcon from './CartIcon';
 
 function Navbar() {
     const ref = useRef([])
-
+    const [token, setToken] = useState(null)
     const pushRef = (el) => ref.current.push(el);
 
     useGSAP(() => {
@@ -22,6 +22,10 @@ function Navbar() {
             })
         });
     }, [])
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        setToken(token)
+    }, [])
     return (
         <nav>
             <div className="logo" ref={(el) => pushRef(el)}>ProCard</div>
@@ -33,7 +37,16 @@ function Navbar() {
             </ul>
             <div className='actionsBtns'>
                 <CartIcon ref={(el) => pushRef(el)}></CartIcon>
-                <button className="Btn ctaBtn" ref={(el) => pushRef(el)}> <Link to={"/"}>Se connecter</Link> </button>
+                {token ? (
+                    <>
+
+                        <button className="Btn ctaBtn">
+                            <Link to="/profile">Mon profile</Link>
+                        </button></>
+                ) : (
+                    <button className="Btn ctaBtn" ref={(el) => pushRef(el)}> <Link to={"/login"}>Se connecter</Link> </button>
+                )}
+
             </div>
         </nav>
     )

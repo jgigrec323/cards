@@ -20,7 +20,14 @@ const register = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.json({
+        errors: errors.array(),
+        status: false,
+        message: errors
+          .array()
+          .map((error) => error.msg)
+          .toString(),
+      });
     }
 
     const { email, username, password } = req.body;
@@ -28,7 +35,7 @@ const register = async (req, res) => {
     let user = await User.findOne({ where: { email } });
 
     if (user) {
-      return res.status(400).json({ errors: [{ msg: "User already exists" }] });
+      return res.json({ message: "user already exist", status: false });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -36,40 +43,50 @@ const register = async (req, res) => {
 
     user = await User.create({ email, username, password: hashedPassword });
 
-    const token = JWT.sign({ user: { id: user.id } }, process.env.JWT_SECRET);
+    const token = JWT.sign({ user: { id: user.id } }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, status: true });
   } catch (error) {
-    res.status(500).json({ message: "Failed to register user", error: error });
+    res
+      .status(500)
+      .json({ message: "Failed to register user", error: error, status: true });
   }
 };
 
 const login = async (req, res) => {
   const { username, password } = req.body;
-  let user = await User.findOne({
-    where: {
-      [Op.or]: [{ email: username }, { username: username }],
-    },
-  });
+  try {
+    let user = await User.findOne({
+      where: {
+        [Op.or]: [{ email: username }, { username: username }],
+      },
+    });
 
-  if (!user) {
-    return res
-      .status(422)
-      .json({ message: "Invalid credentials, user doesn't exist" });
+    if (!user) {
+      return res.json({
+        message: "Invalid credentials, user doesn't exist",
+        status: false,
+      });
+    }
+
+    let isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.json({ message: "Invalid credentials", status: false });
+    }
+
+    const token = JWT.sign({ user: { id: user.id } }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.status(200).json({ token, status: true });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to log in", error: error, status: true });
   }
-
-  let isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
-    return res.status(404).json({ message: "Invalid credentials" });
-  }
-
-  const token = JWT.sign(
-    { user: { user: { id: user.id } } },
-    process.env.JWT_SECRET
-  );
-
-  res.json({ token });
 };
 
 const getAll = async (req, res) => {

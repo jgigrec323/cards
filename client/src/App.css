@@ -84,6 +84,10 @@ ul {
   font-size: 1.5rem;
   font-weight: bold; }
 
+.spacer {
+  min-height: 5vh;
+  min-width: 100vw; }
+
 nav {
   display: flex;
   justify-content: space-between;
@@ -634,3 +638,148 @@ aside.editComponent {
     margin-bottom: 2rem; }
   aside.editComponent.visible {
     right: 0; }
+
+section.login,
+section.register {
+  position: relative;
+  height: calc(100vh);
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center; }
+  section.login .card,
+  section.register .card {
+    position: absolute;
+    width: 550px;
+    height: 90%;
+    border-radius: 10px;
+    top: 35px;
+    transform-origin: bottom right; }
+    section.login .card--1,
+    section.register .card--1 {
+      background-color: #e3cc00;
+      right: 0;
+      transform: rotate(3deg) translateX(40px); }
+    section.login .card--2,
+    section.register .card--2 {
+      background-color: #fff;
+      right: 0;
+      transform: rotate(4deg) translateX(40px); }
+    section.login .card--3,
+    section.register .card--3 {
+      background-color: #000;
+      right: 0;
+      transform: rotate(5deg) translateX(40px); }
+    section.login .card--4,
+    section.register .card--4 {
+      height: 90%;
+      background-color: #e3cc00;
+      left: -20px;
+      transform: rotate(5deg) translateX(-60px); }
+    section.login .card--5,
+    section.register .card--5 {
+      height: 90%;
+      background-color: #000;
+      left: -20px;
+      transform: rotate(5deg) translateX(-70px); }
+  section.login .wrapper,
+  section.register .wrapper {
+    font-size: 2rem; }
+    section.login .wrapper .spacer,
+    section.register .wrapper .spacer {
+      height: 15vh;
+      min-width: 100% !important; }
+    section.login .wrapper .title,
+    section.register .wrapper .title {
+      margin-bottom: 7rem; }
+      section.login .wrapper .title p,
+      section.register .wrapper .title p {
+        font-size: 1.5rem; }
+    section.login .wrapper form,
+    section.register .wrapper form {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem; }
+      section.login .wrapper form > div,
+      section.register .wrapper form > div {
+        display: flex;
+        flex-direction: column; }
+        section.login .wrapper form > div label,
+        section.register .wrapper form > div label {
+          font-size: 1.5rem;
+          margin-bottom: 0.5rem;
+          font-weight: bold; }
+        section.login .wrapper form > div input,
+        section.register .wrapper form > div input {
+          width: 30rem;
+          height: 3rem;
+          color: #000;
+          border: 2px solid #000;
+          outline: none;
+          border-radius: 2px;
+          padding: 0 0.5rem;
+          font-size: 1.5rem; }
+      section.login .wrapper form button,
+      section.register .wrapper form button {
+        margin-top: 2rem;
+        font-weight: bold;
+        font-size: 1.5rem;
+        background-color: #000;
+        color: #fff;
+        cursor: pointer;
+        padding: 1rem 2rem;
+        cursor: pointer; }
+      section.login .wrapper form p,
+      section.register .wrapper form p {
+        text-align: center;
+        font-size: 1.4rem; }
+
+section.register .wrapper .spacer {
+  height: 10vh; }
+
+section.dashboard {
+  padding: 5rem; }
+  section.dashboard hr {
+    margin: 3rem auto; }
+  section.dashboard .wrapper > h1 {
+    font-size: 4rem;
+    margin-bottom: 3rem; }
+  section.dashboard .wrapper h2 {
+    font-size: 2.2rem;
+    margin-bottom: 1rem; }
+  section.dashboard .wrapper .informations {
+    color: #fff;
+    background-color: #000;
+    padding: 2rem;
+    border-radius: 1rem;
+    font-size: 1.8rem; }
+    section.dashboard .wrapper .informations ul li {
+      margin-bottom: 1rem; }
+  section.dashboard .wrapper .myorders table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 1.5rem; }
+    section.dashboard .wrapper .myorders table th,
+    section.dashboard .wrapper .myorders table td {
+      border: 1px solid #fff;
+      padding: 8px;
+      text-align: left;
+      color: #fff; }
+    section.dashboard .wrapper .myorders table th {
+      color: #fff;
+      background-color: #000; }
+    section.dashboard .wrapper .myorders table tbody tr {
+      background-color: #000; }
+    section.dashboard .wrapper .myorders table tbody td:first-child {
+      border-left: 0; }
+    section.dashboard .wrapper .myorders table tbody td:last-child {
+      border-right: 0; }
+  section.dashboard .Btn {
+    margin-top: 7rem;
+    font-weight: bold;
+    font-size: 1.5rem;
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+    padding: 1rem 2rem; }
