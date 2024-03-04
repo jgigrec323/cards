@@ -12,6 +12,7 @@ app.use(express.json());
 app.use("/auth", require("./routes/auth"));
 app.use("/orders", require("./routes/order"));
 app.use("/users", require("./routes/user"));
+app.use("/uploads", express.static("uploads"));
 
 db.authenticate()
   .then(() => {

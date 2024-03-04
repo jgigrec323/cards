@@ -55,6 +55,41 @@ export const getUserInfoById = async () => {
     throw error;
   }
 };
+export const authenticateUserRoutes = async (username) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      throw new Error("Token not found");
+    }
+    const headers = {
+      "x-auth-token": token,
+    };
+    const response = await axiosInstance.get(`/users/${username}`, { headers });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const saveUserInfos = async (userDatas) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      throw new Error("Token not found");
+    }
+    const headers = {
+      "x-auth-token": token,
+    };
+    const response = await axiosInstance.post("/users/saveInfos", userDatas, {
+      headers,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getUserOrders = async () => {
   try {
@@ -65,6 +100,7 @@ export const getUserOrders = async () => {
     }
     const headers = {
       "x-auth-token": token,
+      "content-type": "multipart/form-data",
     };
     const response = await axiosInstance.get("/orders/", { headers });
     return response;

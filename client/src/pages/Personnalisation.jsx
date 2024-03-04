@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../components/AppContext';
 import { Link, useNavigate } from 'react-router-dom';
 import transition from '../js/transition';
+import { saveUserInfos } from '../routes/api';
 
 function Personnalisation() {
     const { saveUserDatas, savedData } = useAppContext();
@@ -19,7 +20,22 @@ function Personnalisation() {
             facebook: { active: false, username: '' },
             instagram: { active: false, username: '' },
             twitter: { active: false, username: '' },
-            whatsapp: { active: false, username: '' }
+            whatsapp: { active: false, username: '' },
+            spotify: { active: false, username: '' },
+            pinterest: { active: false, username: '' },
+            youtube: { active: false, username: '' }
+        },
+        header: null,
+        body: null,
+        footer: null,
+        texts: {
+            name: null,
+            bio: null,
+            fonction: null,
+        },
+        button: {
+            textColor: null,
+            bgColor: null
         }
     });
 
@@ -112,10 +128,27 @@ function Personnalisation() {
         }
 
 
-        saveUserDatas(formData)
-        navigate('/profile')
+        saveDatas()
+        //have to customize here
+        navigate(`/jgigrec323`)
     };
 
+    const saveDatas = async () => {
+        const formDatas = new FormData()
+        formDatas.append('nom', formData.nom);
+        formDatas.append('prenom', formData.prenom);
+        formDatas.append('fonction', formData.fonction);
+        formDatas.append('phoneNumber', formData.phoneNumber);
+        formDatas.append('email', formData.email);
+        formDatas.append('bio', formData.bio);
+        formDatas.append('profileImage', formData.profileImage);
+        formDatas.append('cvFile', formData.cvFile);
+        formDatas.append('socialMedia', JSON.stringify(formData.socialMedia));
+
+        saveUserDatas(formData)
+        const response = saveUserInfos(formDatas)
+        console.log(response)
+    }
     useEffect(() => {
         if (savedData !== null) {
 

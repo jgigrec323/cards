@@ -25,7 +25,6 @@ const getUserInfosByUserId = async (req, res) => {
       where: { user_id },
       include: SocialMedia,
     });
-
     if (!userPerso) {
       return res.json({
         message: "User Informations not found",
@@ -47,7 +46,23 @@ const getUserInfosByUserId = async (req, res) => {
     });
   }
 };
-
+const authenticateUserRoutes = async (req, res) => {
+  const { userId } = req;
+  const { username } = req.params;
+  try {
+    let user = await User.findOne({ where: userId });
+    if (!user) {
+      return res.json({ message: "User not found", status: false });
+    }
+    if (user.username === username) {
+      return res.status(200).json({ message: "User found", status: true });
+    } else {
+      return res.status(200).json({ message: "Not the user", status: false });
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -87,16 +102,18 @@ const saveUserInfos = async (req, res) => {
           textsData,
           buttonData,
         } = req.body;
-        console.log(socialMedia);
+
+        const parsedSocialMedia = JSON.parse(socialMedia);
+        console.log(parsedSocialMedia);
         // Create a new SocialMedia instance
         const newSocialMedia = await SocialMedia.create({
-          facebook: socialMedia.facebook,
-          instagram: socialMedia.instagram,
-          twitter: socialMedia.twitter,
-          whatsapp: socialMedia.whatsapp,
-          spotify: socialMedia.spotify,
-          pinterest: socialMedia.pinterest,
-          youtube: socialMedia.youtube,
+          facebook: parsedSocialMedia.facebook.username,
+          instagram: parsedSocialMedia.instagram.username,
+          twitter: parsedSocialMedia.twitter.username,
+          whatsapp: parsedSocialMedia.whatsapp.username,
+          spotify: parsedSocialMedia.spotify.username,
+          pinterest: parsedSocialMedia.pinterest.username,
+          youtube: parsedSocialMedia.youtube.username,
         });
         const newHeader = await Header.create(headerData);
         const newFooter = await Footer.create(footerData);
@@ -104,6 +121,7 @@ const saveUserInfos = async (req, res) => {
         const newTexts = await Texts.create(textsData);
         const newButton = await Button.create(buttonData);
         // Extract uploaded file details from req.files
+
         const cvFilename = req.files.cvFile
           ? req.files.cvFile[0].filename
           : null;
@@ -144,4 +162,9 @@ const saveUserInfos = async (req, res) => {
   }
 };
 
-module.exports = { getUserById, getUserInfosByUserId, saveUserInfos };
+module.exports = {
+  getUserById,
+  getUserInfosByUserId,
+  saveUserInfos,
+  authenticateUserRoutes,
+};
