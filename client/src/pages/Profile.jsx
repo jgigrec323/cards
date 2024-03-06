@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import transition from '../js/transition';
 import { useAppContext } from '../components/AppContext';
 import EditComponent from '../components/EditComponent';
-import { authenticateUserRoutes, getUserInfoById } from '../routes/api';
+import { authenticateUserRoutes, getInfoByUsername, populateStyle, updateBody, updateButton, updateFooter, updateHeader, updateTexts } from '../routes/api';
 
 function Profile() {
     const { username } = useParams()
@@ -13,37 +13,135 @@ function Profile() {
     const [isUserLogged, setIsUserLogged] = useState(false)
     const [isUserFound, setIsUserFound] = useState(false)
     const [isFetching, setIsFetching] = useState(true)
+    const [styleObject, setStyleObject] = useState({
+        header: {
+            backgroundColor: '#ffffff',
+        },
+        body: {
+            backgroundColor: '#ffffff',
+        },
+        texts: {
+            name: {
+                color: '#000000',
+            },
+            fonction: {
+                color: '#000000',
+            },
+            bio: {
+                color: '#000000',
+            },
+        },
+        footer: {
+            backgroundColor: '#ffffff',
+        },
+        button: {
+            backgroundColor: '#ffffff',
+            textColor: '#000000',
+        },
+    });
 
-    const navigate = useNavigate();
+
 
     const determineUser = async () => {
         setIsFetching(true)
-        console.log(username)
-        if (!localStorage.getItem("token")) {
-            setIsUserLogged(false)
+
+
+
+
+        //has to be fetched by username
+        const infos = await getInfoByUsername(username)
+        console.log(infos)
+        if (!infos.data.status) {
+            setIsUserFound(false)
         }
         else {
-            //has to be fetched by username
-            const infos = await getUserInfoById()
-
-            if (!infos.data.status) {
-                setIsUserFound(false)
+            if (!localStorage.getItem("token")) {
+                setIsUserLogged(false)
             }
             else {
                 const response = await authenticateUserRoutes(username)
                 setIsUserLogged(response.data.status)
-                if (infos.data.status === true) {
-                    setUserInfos(infos.data.userPerso)
-                    const mergedData = { ...savedData, ...infos.data.userPerso };
-                    setSavedData(mergedData);
-                }
-                setIsUserFound(true)
             }
 
+            if (infos.data.status === true) {
+                setUserInfos(infos.data.userPerso)
+                //const mergedData = { ...savedData, ...infos.data.userPerso };
+                //setSavedData(mergedData);
+                setStyleObject(prevStyleObject => ({
+                    ...prevStyleObject,
+                    header: {
+                        backgroundColor: infos.data.Header ? infos.data.Header.value : '#ffffff',
+                    },
+                    body: {
+                        backgroundColor: infos.data.Body ? infos.data.Body.value : '#ffffff',
+                    },
+                    texts: {
+                        name: {
+                            color: infos.data.Text ? infos.data.Text.nameColor : '#000000',
+                        },
+                        fonction: {
+                            color: infos.data.Text ? infos.data.Text.fonctionColor : '#000000',
+                        },
+                        bio: {
+                            color: infos.data.Text ? infos.data.Text.bioColor : '#000000',
+                        },
+                    },
+                    footer: {
+                        backgroundColor: infos.data.Footer ? infos.data.Footer.value : '#ffffff',
+                    },
+                    button: {
+                        backgroundColor: infos.data.Button ? infos.data.Button.bgColor : '#ffffff',
+                        textColor: infos.data.Button ? infos.data.Button.textColor : '#000000',
+                    },
+                }));
+            }
+            setIsUserFound(true)
+
+            //await populateStyleObjects()
+
         }
+
+
         setIsFetching(false)
     }
+    function isImageFile(value) {
+        // List of supported image file extensions
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
 
+        // Extracting file extension
+        const extension = value.split('.').pop().toLowerCase();
+
+        // Checking if the extension is in the list of image extensions
+        return imageExtensions.includes(extension);
+    }
+
+    const populateStyleObjects = async () => {
+        const { button_id, texts_id, header_id, footer_id, body_id } = userInfos;
+        try {
+            const response = await populateStyle({ buttonId: button_id, bodyId: body_id, textsId: texts_id, headerId: header_id, footerId: footer_id });
+            console.log(response)
+            if (response.data.status) {
+                const { button, header, body, footer, texts } = response.data;
+                const fbg = isImageFile(footer.value) ? `url(${process.env.REACT_APP_BASE_URL}/uploads/${footer.value})` : footer.value
+                const hbg = isImageFile(header.value) ? `url(${process.env.REACT_APP_BASE_URL}/uploads/${header.value})` : header.value
+                setStyleObject(prevStyleObject => ({
+                    ...prevStyleObject,
+                    body: { ...prevStyleObject.body, backgroundColor: body.value },
+                    button: { ...prevStyleObject.button, backgroundColor: button.bgColor, textColor: button.textColor },
+                    header: { ...prevStyleObject.header, backgroundColor: hbg },
+                    footer: { ...prevStyleObject.footer, backgroundColor: fbg },
+                    texts: {
+                        ...prevStyleObject.texts,
+                        bio: { ...prevStyleObject.texts.bio, color: texts.bioColor },
+                        fonction: { ...prevStyleObject.texts.fonction, color: texts.fonctionColor },
+                        name: { ...prevStyleObject.texts.name, color: texts.nameColor }
+                    }
+                }));
+            }
+        } catch (error) {
+            console.error("Error populating style objects:", error);
+        }
+    }
     useEffect(() => {
         setIsCommandClicked(false);
 
@@ -53,110 +151,120 @@ function Profile() {
             window.document.body.style.overflowY = "scroll";
         }
 
+
         // Check if savedData is null or not set, then redirect to the appropriate page
         determineUser()
     }, [isCommandClicked]);
 
-    // Function to render header based on savedData
+    useEffect(() => {
+        if (userInfos && isUserFound) {
+            populateStyleObjects();
+        }
+    }, [userInfos, isUserFound]);
+
     const renderHeader = () => {
-        if (!savedData || !savedData.header || !savedData.header.type) {
-            return <header></header>;
-        }
-
-        // Switch based on the type of header
-        switch (savedData.header.type) {
-            case 'uniqueColor':
-                return <header style={{ background: savedData.header.value }}></header>;
-            case 'gradient':
-                const [color1, color2] = savedData.header.value || ['#ffffff', '#ffffff']; // Default gradient colors
-                return <header style={{ background: `linear-gradient(to right, ${color1}, ${color2})` }}></header>;
-            case 'image':
-                return <header style={{ backgroundImage: `url(${savedData.header.value})` }}></header>;
-            default:
-                return <header></header>;
+        const headerStyle = styleObject.header;
+        if (headerStyle.type === 'gradient' && headerStyle.value.length === 2) {
+            return <header style={{ background: `linear-gradient(to right, ${headerStyle.value[0]}, ${headerStyle.value[1]})` }}></header>;
+        } else {
+            return <header style={{ background: headerStyle.backgroundColor }}></header>;
         }
     };
 
-    // Function to render footer based on savedData
+    // Function to render footer based on styleObject
     const renderFooter = () => {
-        if (!savedData || !savedData.footer || !savedData.footer.type) {
-            return <div className="profileFooter"></div>;
-        }
-
-        // Switch based on the type of footer
-        switch (savedData.footer?.type) {
-            case 'uniqueColor':
-                return <div className="profileFooter" style={{ background: savedData.footer.value }}></div>;
-            case 'gradient':
-                const [color1, color2] = savedData.footer.value || ['#ffffff', '#ffffff']; // Default gradient colors
-                return <div className="profileFooter" style={{ background: `linear-gradient(to right, ${color1}, ${color2})` }}></div>;
-            case 'image':
-                return <div className="profileFooter" style={{ backgroundImage: `url(${savedData.footer.value})` }}></div>;
-            default:
-                return <div className="profileFooter"></div>;
+        const footerStyle = styleObject.footer;
+        if (footerStyle.type === 'gradient' && footerStyle.value.length === 2) {
+            return <div className="profileFooter" style={{ background: `linear-gradient(to right, ${footerStyle.value[0]}, ${footerStyle.value[1]})` }}></div>;
+        } else {
+            return <div className="profileFooter" style={{ background: footerStyle.backgroundColor }}></div>;
         }
     };
-    const renderBody = () => {
-        if (!savedData || !savedData.body) {
-            return <div className="profileBody"></div>;
-        }
 
+
+    // Function to render body based on styleObject
+    const renderBody = () => {
         return (
-            <div className="infos" style={{ background: savedData.body?.value || '#fff' }}>
+            <div className="infos" style={{ background: styleObject.body.backgroundColor }}>
                 <div className="profilePic">
                     <img src={`${process.env.REACT_APP_BASE_URL}/uploads/${userInfos.profileImage}`} alt="Profile" />
                 </div>
                 <div className="infosPerso">
-                    <h1 className='name' style={{ color: savedData.texts?.name }}>{savedData.prenom} {savedData.nom}</h1>
-                    <p className="fonction" style={{ color: savedData.texts?.fonction }}>{savedData.fonction}</p>
+                    <h1 className='name' style={{ color: styleObject.texts.name.color }}>{userInfos.prenom} {userInfos.nom}</h1>
+                    <p className="fonction" style={{ color: styleObject.texts.fonction.color }}>{userInfos.fonction}</p>
                 </div>
-                <p className="bio" style={{ color: savedData.texts?.bio }}>{savedData.bio}</p>
-                <ul className="liensSociaux" style={{ color: savedData.button?.bgColor }}>
-                    {savedData.socialMedia.facebook && savedData.socialMedia.facebook.active && savedData.socialMedia.facebook.username && (
-                        <Link target='_blank' to={`https://www.facebook.com/${savedData.socialMedia.facebook.username}`}><span className="mdi mdi-facebook"></span></Link>
+                <p className="bio" style={{ color: styleObject.texts.bio.color }}>{userInfos.bio}</p>
+                <ul className="liensSociaux" style={{ color: styleObject.button.backgroundColor }}>
+                    {userInfos.SocialMedium.facebook && (
+                        <Link target='_blank' to={`https://www.facebook.com/${userInfos.SocialMedium.facebook}`}><span className="mdi mdi-facebook"></span></Link>
                     )}
-                    {savedData.socialMedia.instagram && savedData.socialMedia.instagram.active && savedData.socialMedia.instagram.username && (
-                        <Link target='_blank' to={`https://www.instagram.com/${savedData.socialMedia.instagram.username}`}><span className="mdi mdi-instagram"></span></Link>
+                    {userInfos.SocialMedium.instagram && (
+                        <Link target='_blank' to={`https://www.instagram.com/${userInfos.SocialMedium.instagram}`}><span className="mdi mdi-instagram"></span></Link>
                     )}
-                    {savedData.socialMedia.twitter && savedData.socialMedia.twitter.active && savedData.socialMedia.twitter.username && (
-                        <Link target='_blank' to={`https://www.twitter.com/${savedData.socialMedia.twitter.username}`}><span className='mdi mdi-twitter'></span></Link>
+                    {userInfos.SocialMedium.twitter && (
+                        <Link target='_blank' to={`https://www.twitter.com/${userInfos.SocialMedium.twitter}`}><span className='mdi mdi-twitter'></span></Link>
                     )}
-                    {savedData.socialMedia.whatsapp && savedData.socialMedia.whatsapp.active && savedData.socialMedia.whatsapp.username && (
-                        <Link target='_blank' to={`https://wa.me/${savedData.socialMedia.whatsapp.username}`}><span className="mdi mdi-whatsapp"></span></Link>
+                    {userInfos.SocialMedium.whatsapp && (
+                        <Link target='_blank' to={`https://wa.me/${userInfos.SocialMedium.whatsapp}`}><span className="mdi mdi-whatsapp"></span></Link>
                     )}
                 </ul>
                 <ul className="contacts">
-                    <li><span className="mdi mdi-email" style={{ color: savedData.texts?.bio }}></span> <a href={`mailto:${savedData.email}`} style={{ color: savedData.texts?.bio }}>{savedData.email}</a></li>
-                    <li><span className="mdi mdi-phone" style={{ color: savedData.texts?.bio }}></span> <a href={`tel:${savedData.phoneNumber}`} style={{ color: savedData.texts?.bio }}>{savedData.phoneNumber}</a></li>
+                    <li><span className="mdi mdi-email" style={{ color: styleObject.texts.bio.color }}></span> <a href={`mailto:${userInfos.email}`} style={{ color: styleObject.texts.bio.color }}>{userInfos.email}</a></li>
+                    <li><span className="mdi mdi-phone" style={{ color: styleObject.texts.bio.color }}></span> <a href={`tel:${userInfos.phoneNumber}`} style={{ color: styleObject.texts.bio.color }}>{userInfos.phoneNumber}</a></li>
                 </ul>
                 <div className="actionBnts">
-                    <a href={savedData.cvFile} download><button className="Btn" style={{ background: savedData.button?.bgColor, color: savedData.button?.textColor }}>Télécharger mon cv</button></a>
-                    <button className="Btn" style={{ background: savedData.button?.bgColor, color: savedData.button?.textColor }}>Enregistrer mon contact</button>
+                    <a href={`${process.env.REACT_APP_BASE_URL}/uploads/${userInfos.cvFile}`} download={`CV de ${userInfos.prenom} ${userInfos.nom}`}><button className="Btn" style={{ background: styleObject.button.backgroundColor, color: styleObject.button.textColor }}>Télécharger mon cv</button></a>
+                    <button className="Btn" style={{ background: styleObject.button.backgroundColor, color: styleObject.button.textColor }}>Enregistrer mon contact</button>
                 </div>
             </div>
         );
     };
 
+
     const renderEditButton = () => {
         if (!isUserLogged) {
-            return null; // Render nothing if user is not logged in or if savedData is not found
+            return null;
         }
-
-        const buttonStyle = savedData && (savedData.button ? { background: savedData.button.bgColor, color: savedData.button.textColor } : "")
-
+        const buttonStyle = { background: styleObject.button.backgroundColor, color: styleObject.button.textColor }
         return (
-            <span style={buttonStyle} onClick={() => { setEditMode(!editMode) }} className='mdi mdi-pencil'></span>
+            <span style={buttonStyle} onClick={() => { setEditMode(!editMode); updateStyle() }} className='mdi mdi-pencil'></span>
         );
     };
 
+    const updateStyle = async () => {
+        const { button_id, texts_id, header_id, footer_id, body_id } = userInfos;
+
+        try {
+            if (styleObject.header.backgroundColor.length < 255) {
+                const updatedHeader = await updateHeader({ id: header_id, value: styleObject.header.backgroundColor })
+            }
+            if (styleObject.footer.backgroundColor.length < 255) {
+                const updatedFooter = await updateFooter({ id: footer_id, value: styleObject.footer.backgroundColor })
+            }
+            const updatedButton = await updateButton({ id: button_id, bgColor: styleObject.button.backgroundColor, textColor: styleObject.button.textColor })
+            const updatedTexts = await updateTexts({ id: texts_id, bioColor: styleObject.texts.bio.color, fonctionColor: styleObject.texts.fonction.color, nameColor: styleObject.texts.name.color })
+            const updatedBody = await updateBody({ id: body_id, value: styleObject.body.backgroundColor })
+
+            console.log(updatedButton, updatedTexts, updatedBody)
+        } catch (error) {
+            throw error
+        }
+
+    }
+
     return (
         <main className='profilePage'>
-            <EditComponent setEditMode={setEditMode} editMode={editMode}></EditComponent>
-            {!isFetching ? <>
-                {renderHeader()}
-                {renderBody()}
-                {renderFooter()}
-            </> : "loading"}
+            <EditComponent userInfos={userInfos} styleObject={styleObject} setStyleObject={setStyleObject} setEditMode={setEditMode} editMode={editMode} updateStyle={updateStyle}></EditComponent>
+            {!isFetching && isUserFound && (
+                <>
+                    {renderHeader()}
+                    {renderBody()}
+                    {renderFooter()}
+                    {renderEditButton()}
+                </>
+            )}
+            {!isFetching && !isUserFound && <div>User not found</div>}
+            {isFetching && <div>Loading...</div>}
 
             {renderEditButton()}
         </main>

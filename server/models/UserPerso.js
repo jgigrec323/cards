@@ -2,6 +2,11 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/database");
 const SocialMedia = require("./SocialMedia");
+const Header = require("./Header");
+const Button = require("./Button");
+const Body = require("./Body");
+const Footer = require("./Footer");
+const Texts = require("./Texts");
 
 const UserPerso = db.define(
   "UserPerso",
@@ -106,5 +111,10 @@ const UserPerso = db.define(
   }
 );
 UserPerso.belongsTo(SocialMedia, { foreignKey: "social_media_id" });
+UserPerso.belongsTo(Button, { foreignKey: "button_id" });
+UserPerso.belongsTo(Body, { foreignKey: "body_id" });
+UserPerso.belongsTo(Footer, { foreignKey: "footer_id" });
+UserPerso.belongsTo(Header, { foreignKey: "header_id" });
+UserPerso.belongsTo(Texts, { foreignKey: "texts_id" });
 
 module.exports = UserPerso;

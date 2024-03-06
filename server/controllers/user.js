@@ -46,6 +46,56 @@ const getUserInfosByUserId = async (req, res) => {
     });
   }
 };
+const getUserInfosByUsername = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    // Find the user by username
+    const user = await User.findOne({
+      where: { username },
+    });
+
+    if (!user) {
+      return res.json({
+        message: "User not found",
+        status: "notFound",
+      });
+    }
+
+    // Find the userPerso using the user_id obtained from the user record
+    const userPerso = await UserPerso.findOne({
+      where: { user_id: user.id },
+      include: [
+        { model: SocialMedia },
+        { model: Button },
+        { model: Header },
+        { model: Texts },
+        { model: Body },
+        { model: Footer },
+      ],
+    });
+
+    if (!userPerso) {
+      return res.json({
+        message: "User Informations not found",
+        status: "notFound",
+      });
+    }
+
+    res.status(200).json({
+      message: "User Informations found!",
+      userPerso,
+      status: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to fetch UserPerso data",
+      error,
+      status: false,
+    });
+  }
+};
 const authenticateUserRoutes = async (req, res) => {
   const { userId } = req;
   const { username } = req.params;
@@ -167,4 +217,5 @@ module.exports = {
   getUserInfosByUserId,
   saveUserInfos,
   authenticateUserRoutes,
+  getUserInfosByUsername,
 };

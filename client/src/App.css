@@ -301,20 +301,31 @@ main.profilePage {
   main.profilePage > header {
     width: 100%;
     height: 40vh;
-    background-image: linear-gradient(#6243f8, #be29eb); }
+    background: linear-gradient(#6243f8, #be29eb);
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important; }
   main.profilePage .infos {
     position: relative;
     padding: 5rem 20rem; }
     main.profilePage .infos .profilePic {
       position: absolute;
-      top: -30%;
+      top: -27%;
       width: 200px;
       height: 200px;
       border-radius: 50%;
       background-image: url("https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D");
       background-position: center;
       background-size: cover;
-      border: 5px solid white; }
+      border: 3px solid white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden; }
+      main.profilePage .infos .profilePic > img {
+        width: 100%;
+        object-fit: cover;
+        object-position: center; }
       main.profilePage .infos .profilePic > span {
         position: absolute;
         right: 0%;
@@ -357,7 +368,10 @@ main.profilePage {
   main.profilePage .profileFooter {
     width: 100%;
     height: 10vh;
-    background: #6243f8; }
+    background: #6243f8;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important; }
   main.profilePage .mdi-pencil {
     display: block;
     height: 50px;
