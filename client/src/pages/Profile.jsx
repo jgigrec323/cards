@@ -7,7 +7,7 @@ import { authenticateUserRoutes, getInfoByUsername, populateStyle, updateBody, u
 
 function Profile() {
     const { username } = useParams()
-    const { savedData, setSavedData, setIsCommandClicked, isCommandClicked } = useAppContext();
+    const { savedData, setSavedData, setIsCommandClicked, isCommandClicked, setUserInformations } = useAppContext();
     const [editMode, setEditMode] = useState(false);
     const [userInfos, setUserInfos] = useState({})
     const [isUserLogged, setIsUserLogged] = useState(false)
@@ -55,7 +55,7 @@ function Profile() {
             setIsUserFound(false)
         }
         else {
-            if (!localStorage.getItem("token")) {
+            if (!sessionStorage.getItem("token")) {
                 setIsUserLogged(false)
             }
             else {
@@ -159,6 +159,7 @@ function Profile() {
     useEffect(() => {
         if (userInfos && isUserFound) {
             populateStyleObjects();
+            setUserInformations(userInfos)
         }
     }, [userInfos, isUserFound]);
 
@@ -195,16 +196,16 @@ function Profile() {
                 </div>
                 <p className="bio" style={{ color: styleObject.texts.bio.color }}>{userInfos.bio}</p>
                 <ul className="liensSociaux" style={{ color: styleObject.button.backgroundColor }}>
-                    {userInfos.SocialMedium.facebook && (
+                    {userInfos.SocialMedium && userInfos.SocialMedium.facebook && (
                         <Link target='_blank' to={`https://www.facebook.com/${userInfos.SocialMedium.facebook}`}><span className="mdi mdi-facebook"></span></Link>
                     )}
-                    {userInfos.SocialMedium.instagram && (
+                    {userInfos.SocialMedium && userInfos.SocialMedium.instagram && (
                         <Link target='_blank' to={`https://www.instagram.com/${userInfos.SocialMedium.instagram}`}><span className="mdi mdi-instagram"></span></Link>
                     )}
-                    {userInfos.SocialMedium.twitter && (
+                    {userInfos.SocialMedium && userInfos.SocialMedium.twitter && (
                         <Link target='_blank' to={`https://www.twitter.com/${userInfos.SocialMedium.twitter}`}><span className='mdi mdi-twitter'></span></Link>
                     )}
-                    {userInfos.SocialMedium.whatsapp && (
+                    {userInfos.SocialMedium && userInfos.SocialMedium.whatsapp && (
                         <Link target='_blank' to={`https://wa.me/${userInfos.SocialMedium.whatsapp}`}><span className="mdi mdi-whatsapp"></span></Link>
                     )}
                 </ul>

@@ -211,6 +211,104 @@ const saveUserInfos = async (req, res) => {
     res.status(500).json({ message: "Failed to save UserPerso" });
   }
 };
+const updateUserInfos = async (req, res) => {
+  const { userId } = req;
+
+  try {
+    // Handle file uploads
+    upload.fields([{ name: "cvFile" }, { name: "profileImage" }])(
+      req,
+      res,
+      async (err) => {
+        if (err) {
+          console.error("Error uploading files:", err);
+          return res.status(500).json({ message: "Failed to upload files" });
+        }
+
+        // Extract data from request body
+        const { nom, prenom, fonction, phoneNumber, email, bio, socialMedia } =
+          req.body;
+
+        // Find the existing userPerso record
+        const userPerso = await UserPerso.findOne({
+          where: { user_id: userId },
+        });
+        if (!userPerso) {
+          return res
+            .status(404)
+            .json({ message: "User information not found", status: false });
+        }
+
+        // Update social media data if provided
+        // Update social media data if provided
+        if (socialMedia) {
+          const parsedSocialMedia = JSON.parse(socialMedia);
+
+          // Retrieve the associated social media record
+          const socialMediaRecord = await SocialMedia.findByPk(
+            userPerso.social_media_id
+          );
+
+          if (!socialMediaRecord) {
+            return res.status(404).json({
+              message: "Social media information not found",
+              status: false,
+            });
+          }
+
+          // Update social media record
+          await socialMediaRecord.update({
+            facebook: parsedSocialMedia.facebook.username,
+            instagram: parsedSocialMedia.instagram.username,
+            twitter: parsedSocialMedia.twitter.username,
+            whatsapp: parsedSocialMedia.whatsapp.username,
+            spotify: parsedSocialMedia.spotify.username,
+            pinterest: parsedSocialMedia.pinterest.username,
+            youtube: parsedSocialMedia.youtube.username,
+            // Add other fields as needed
+          });
+        }
+
+        // Update other user information if provided
+        await userPerso.update({
+          nom: nom || userPerso.nom,
+          prenom: prenom || userPerso.prenom,
+          fonction: fonction || userPerso.fonction,
+          phoneNumber: phoneNumber || userPerso.phoneNumber,
+          email: email || userPerso.email,
+          bio: bio || userPerso.bio,
+          // Add other fields as needed
+        });
+
+        // Update uploaded files if available
+        if (req.files) {
+          const cvFilename = req.files.cvFile
+            ? req.files.cvFile[0].filename
+            : userPerso.cvFile;
+          const profileImageFilename = req.files.profileImage
+            ? req.files.profileImage[0].filename
+            : userPerso.profileImage;
+
+          // Update file names in UserPerso
+          await userPerso.update({
+            profileImage: profileImageFilename,
+            cvFile: cvFilename,
+          });
+        }
+
+        // Respond with the updated UserPerso
+        res.status(200).json({
+          userPerso,
+          message: "User information updated successfully",
+          status: true,
+        });
+      }
+    );
+  } catch (error) {
+    console.error("Error updating user information:", error);
+    res.status(500).json({ message: "Failed to update user information" });
+  }
+};
 
 module.exports = {
   getUserById,
@@ -218,4 +316,5 @@ module.exports = {
   saveUserInfos,
   authenticateUserRoutes,
   getUserInfosByUsername,
+  updateUserInfos,
 };

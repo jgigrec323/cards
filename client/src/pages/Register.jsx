@@ -4,12 +4,15 @@ import Footer from '../components/Footer'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import { registerUser } from '../routes/api';
+import { useAppContext } from '../components/AppContext';
 function Register() {
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [isFetching, setIsFetching] = useState(false)
+
+    const { setUser } = useAppContext();
 
     const validateEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -42,8 +45,9 @@ function Register() {
             setIsFetching(true);
             const response = await registerUser({ email, username, password });
             if (response.data.status) {
-                // Store the JWT token in localStorage
-                localStorage.setItem('token', response.data.token);
+                // Store the JWT token in sessionStorage
+                sessionStorage.setItem('token', response.data.token);
+                setUser(response.data.username)
                 toast.success("Inscription réussie !");
 
                 navigate('/dashboard');

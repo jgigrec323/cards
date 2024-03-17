@@ -32,7 +32,7 @@ function EditComponent({ userInfos, setEditMode, editMode, styleObject, setStyle
     const footerImageInputRef = useRef(null);
 
     const handleOnClick = () => {
-        navigate("/personnalisation");
+        navigate("/editInformations");
     };
 
     const handleUpdateProfile = () => {

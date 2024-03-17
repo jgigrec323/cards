@@ -18,6 +18,7 @@ export const AppProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isCommandClicked, setIsCommandClicked] = useState(false);
     const [savedData, setSavedData] = useState(null);
+    const [userInformations, setUserInformations] = useState(null)
 
 
     // Define functions to update the states
@@ -86,9 +87,9 @@ export const AppProvider = ({ children }) => {
     return (
         <AppContext.Provider value={{
             isCommandClicked, setIsCommandClicked,
-            selectedCard, handleOnCommand, cartCount, user, addToCart,
+            selectedCard, handleOnCommand, cartCount, user, setUser, addToCart,
             removeFromCart, updateCartCount, updateItemQuantity, login, logout,
-            cards, cartItems, saveUserDatas, savedData, setSavedData
+            cards, cartItems, saveUserDatas, savedData, setSavedData, setUserInformations, userInformations
         }}>
             {children}
         </AppContext.Provider>

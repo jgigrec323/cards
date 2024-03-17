@@ -47,7 +47,7 @@ const register = async (req, res) => {
       expiresIn: "7d",
     });
 
-    res.status(200).json({ token, status: true });
+    res.status(200).json({ token, username: user.username, status: true });
   } catch (error) {
     res
       .status(500)
@@ -81,7 +81,7 @@ const login = async (req, res) => {
       expiresIn: "7d",
     });
 
-    res.status(200).json({ token, status: true });
+    res.status(200).json({ token, username: user.username, status: true });
   } catch (error) {
     res
       .status(500)

@@ -5,11 +5,14 @@ import Footer from '../components/Footer'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import { loginUser } from '../routes/api'
+import { useAppContext } from '../components/AppContext'
 function Login() {
     const navigate = useNavigate()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [isFetching, setIsFetching] = useState(false)
+
+    const { setUser } = useAppContext();
 
 
     const handleSubmit = async (e) => {
@@ -36,8 +39,11 @@ function Login() {
             const response = await loginUser({ username, password });
 
             if (response.data.status) {
-                // Store the JWT token in localStorage
-                localStorage.setItem('token', response.data.token);
+                // Store the JWT token in sessionStorage
+
+                sessionStorage.setItem('token', response.data.token);
+
+                setUser(response.data.username)
                 toast.success("Connexion réussie !");
 
                 navigate('/dashboard');

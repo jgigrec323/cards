@@ -9,6 +9,7 @@ import Personnalisation from "./pages/Personnalisation";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import EditInformations from "./pages/EditInformations";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/editInformations" element={<EditInformations />} />
           <Route path="/:username" element={<Profile />} />
         </Routes>
       </AnimatePresence>

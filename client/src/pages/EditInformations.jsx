@@ -2,21 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../components/AppContext';
 import { Link, useNavigate } from 'react-router-dom';
 import transition from '../js/transition';
-import { saveUserInfos } from '../routes/api';
+import { editUserInfos, saveUserInfos } from '../routes/api';
 
-function Personnalisation() {
-    const { saveUserDatas, savedData, user } = useAppContext();
-    const navigate = useNavigate()
+function EditInformations() {
+    const { saveUserDatas, savedData, userInformations, user } = useAppContext();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        nom: '',
-        prenom: '',
-        fonction: '',
-        phoneNumber: '',
-        email: '',
-        bio: '',
+        id: "",
+        nom: "",
+        prenom: "",
+        fonction: "",
+        phoneNumber: "",
+        email: "",
+        bio: "",
         profileImage: null,
         cvFile: null,
-        socialMedia: {
+        texts_id: null,
+        footer_id: null,
+        body_id: null,
+        header_id: null,
+        button_id: null,
+        user_id: null,
+        social_media_id: null,
+        SocialMedium: {
+            id: null,
             facebook: { active: false, username: '' },
             instagram: { active: false, username: '' },
             twitter: { active: false, username: '' },
@@ -25,29 +34,41 @@ function Personnalisation() {
             pinterest: { active: false, username: '' },
             youtube: { active: false, username: '' }
         },
-        header: null,
-        body: null,
-        footer: null,
-        texts: {
-            name: null,
-            bio: null,
-            fonction: null,
-        },
-        button: {
+        Button: {
+            id: null,
             textColor: null,
             bgColor: null
+        },
+        Header: {
+            id: null,
+            value: null
+        },
+        Text: {
+            id: null,
+            bioColor: null,
+            fonctionColor: null,
+            nameColor: null
+        },
+        Body: {
+            id: null,
+            value: null
+        },
+        Footer: {
+            id: null,
+            value: null
         }
     });
 
+
     const handleInputChange = (e) => {
         const { name, value, type, checked, files } = e.target;
-        console.log(name)
+        console.log(name);
         if (type === 'checkbox') {
             setFormData(prevState => ({
                 ...prevState,
-                socialMedia: {
-                    ...prevState.socialMedia,
-                    [name]: { ...prevState.socialMedia[name], active: checked }
+                SocialMedium: {
+                    ...prevState.SocialMedium,
+                    [name]: { ...prevState.SocialMedium[name], active: checked }
                 }
             }));
         } else if (type === 'file') {
@@ -88,9 +109,9 @@ function Personnalisation() {
         const { value } = e.target;
         setFormData(prevState => ({
             ...prevState,
-            socialMedia: {
-                ...prevState.socialMedia,
-                [name]: { ...prevState.socialMedia[name], username: value }
+            SocialMedium: {
+                ...prevState.SocialMedium,
+                [name]: { ...prevState.SocialMedium[name], username: value }
             }
         }));
     };
@@ -127,34 +148,86 @@ function Personnalisation() {
             return;
         }
 
-
-        saveDatas()
-        //have to customize here
-        navigate(`/${user}`)
+        saveDatas();
+        navigate(`/${user}`);
     };
 
     const saveDatas = async () => {
-        const formDatas = new FormData()
+        const formDatas = new FormData();
         formDatas.append('nom', formData.nom);
         formDatas.append('prenom', formData.prenom);
         formDatas.append('fonction', formData.fonction);
         formDatas.append('phoneNumber', formData.phoneNumber);
         formDatas.append('email', formData.email);
         formDatas.append('bio', formData.bio);
-        formDatas.append('profileImage', formData.profileImage);
-        formDatas.append('cvFile', formData.cvFile);
-        formDatas.append('socialMedia', JSON.stringify(formData.socialMedia));
 
-        saveUserDatas(formData)
-        const response = saveUserInfos(formDatas)
-        console.log(response)
+        if (formData.profileImage) {
+            formDatas.append('profileImage', formData.profileImage);
+        }
+
+        if (formData.cvFile) {
+            formDatas.append('cvFile', formData.cvFile);
+        }
+
+        formDatas.append('socialMedia', JSON.stringify(formData.SocialMedium));
+
+        saveUserDatas(formData);
+        const response = editUserInfos(formDatas);
+        console.log(response);
+    };
+
+
+    const initializeSocialMediaPlatform = (username) => ({
+        active: username !== '',
+        username: username
+    });
+
+
+    const populateForm = () => {
+        setFormData(prevState => ({
+            ...prevState,
+            id: userInformations.id,
+            nom: userInformations.nom,
+            prenom: userInformations.prenom,
+            fonction: userInformations.fonction,
+            phoneNumber: userInformations.phoneNumber,
+            email: userInformations.email,
+            bio: userInformations.bio,
+            profileImage: userInformations.profileImage,
+            cvFile: userInformations.cvFile,
+            texts_id: userInformations.texts_id,
+            footer_id: userInformations.footer_id,
+            body_id: userInformations.body_id,
+            header_id: userInformations.header_id,
+            button_id: userInformations.button_id,
+            user_id: userInformations.user_id,
+            social_media_id: userInformations.social_media_id,
+            SocialMedium: {
+                id: null,
+                facebook: initializeSocialMediaPlatform(userInformations.SocialMedium.facebook),
+                instagram: initializeSocialMediaPlatform(userInformations.SocialMedium.instagram),
+                twitter: initializeSocialMediaPlatform(userInformations.SocialMedium.twitter),
+                whatsapp: initializeSocialMediaPlatform(userInformations.SocialMedium.whatsapp),
+                spotify: initializeSocialMediaPlatform(userInformations.SocialMedium.spotify),
+                pinterest: initializeSocialMediaPlatform(userInformations.SocialMedium.pinterest),
+                youtube: initializeSocialMediaPlatform(userInformations.SocialMedium.youtube)
+            },
+            Button: { ...userInformations.Button },
+            Header: { ...userInformations.Header },
+            Text: { ...userInformations.Text },
+            Body: { ...userInformations.Body },
+            Footer: { ...userInformations.Footer }
+        }));
     }
+
     useEffect(() => {
         if (savedData !== null) {
-
-            setFormData(savedData)
+            setFormData(savedData);
         }
-    }, [navigate, savedData])
+        populateForm()
+    }, [navigate, savedData]);
+
+
     return (
         <div className="personnalisation">
             <h1>Mes infos</h1>
@@ -214,6 +287,11 @@ function Personnalisation() {
                                 onChange={handleInputChange}
                                 required
                             />
+                            {formData.profileImage && (
+                                <button>
+                                    <a href={`${process.env.REACT_APP_BASE_URL}/uploads/${formData.profileImage}`} target="_blank" rel="noopener noreferrer">Voir image</a>
+                                </button>
+                            )}
                         </div>
                         <div className='fileDiv'>
                             <label htmlFor="cvFile">Ajoutez votre CV :</label>
@@ -224,6 +302,11 @@ function Personnalisation() {
                                 accept=".pdf"
                                 onChange={handleInputChange}
                             />
+                            {formData.cvFile && (
+                                <button>
+                                    <a href={`${process.env.REACT_APP_BASE_URL}/uploads/${formData.cvFile}`} target="_blank" rel="noopener noreferrer">Voir cv</a>
+                                </button>
+                            )}
                         </div>
 
                         <div className="socialMedia">
@@ -232,16 +315,16 @@ function Personnalisation() {
                                     <input
                                         type="checkbox"
                                         name="facebook"
-                                        checked={formData.socialMedia.facebook.active}
+                                        checked={formData.SocialMedium.facebook.active}
                                         onChange={handleInputChange}
                                     />
                                     Facebook
                                 </label>
-                                {formData.socialMedia.facebook.active && (
+                                {formData.SocialMedium.facebook.active && (
                                     <input
                                         type="text"
                                         placeholder="Entrez votre nom d'utilisateur Facebook"
-                                        value={formData.socialMedia.facebook.username}
+                                        value={formData.SocialMedium.facebook.username}
                                         onChange={(e) => handleUsernameChange(e, 'facebook')}
                                     />
                                 )}
@@ -252,16 +335,16 @@ function Personnalisation() {
                                     <input
                                         type="checkbox"
                                         name="instagram"
-                                        checked={formData.socialMedia.instagram.active}
+                                        checked={formData.SocialMedium.instagram.active}
                                         onChange={handleInputChange}
                                     />
                                     Instagram
                                 </label>
-                                {formData.socialMedia.instagram.active && (
+                                {formData.SocialMedium.instagram.active && (
                                     <input
                                         type="text"
                                         placeholder="Entrez votre nom d'utilisateur Instagram"
-                                        value={formData.socialMedia.instagram.username}
+                                        value={formData.SocialMedium.instagram.username}
                                         onChange={(e) => handleUsernameChange(e, 'instagram')}
                                     />
                                 )}
@@ -271,16 +354,16 @@ function Personnalisation() {
                                     <input
                                         type="checkbox"
                                         name="twitter"
-                                        checked={formData.socialMedia.twitter.active}
+                                        checked={formData.SocialMedium.twitter.active}
                                         onChange={handleInputChange}
                                     />
                                     Twitter
                                 </label>
-                                {formData.socialMedia.twitter.active && (
+                                {formData.SocialMedium.twitter.active && (
                                     <input
                                         type="text"
                                         placeholder="Entrez votre nom d'utilisateur Twitter"
-                                        value={formData.socialMedia.twitter.username}
+                                        value={formData.SocialMedium.twitter.username}
                                         onChange={(e) => handleUsernameChange(e, 'twitter')}
                                     />
                                 )}
@@ -290,16 +373,16 @@ function Personnalisation() {
                                     <input
                                         type="checkbox"
                                         name="whatsapp"
-                                        checked={formData.socialMedia.whatsapp.active}
+                                        checked={formData.SocialMedium.whatsapp.active}
                                         onChange={handleInputChange}
                                     />
                                     Whatsapp
                                 </label>
-                                {formData.socialMedia.whatsapp.active && (
+                                {formData.SocialMedium.whatsapp.active && (
                                     <input
                                         type="text"
                                         placeholder="Entrez votre numéro Whatsapp"
-                                        value={formData.socialMedia.whatsapp.username}
+                                        value={formData.SocialMedium.whatsapp.username}
                                         onChange={(e) => handleUsernameChange(e, 'whatsapp')}
                                     />
                                 )}
@@ -307,10 +390,10 @@ function Personnalisation() {
                         </div>
                     </div>
                 </form>
-                <button className="Btn" onClick={handleSave}>Voir mon profile</button>
+                <button className="Btn" onClick={handleSave}>Enregistrer</button>
             </div>
         </div>
     );
 }
 
-export default transition(Personnalisation);
+export default transition(EditInformations);

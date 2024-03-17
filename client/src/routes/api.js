@@ -25,7 +25,7 @@ export const loginUser = async (userData) => {
 };
 export const getUserById = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -41,7 +41,7 @@ export const getUserById = async () => {
 };
 export const getUserInfoById = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -68,7 +68,7 @@ export const getInfoByUsername = async (username) => {
 };
 export const authenticateUserRoutes = async (username) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -85,7 +85,7 @@ export const authenticateUserRoutes = async (username) => {
 
 export const saveUserInfos = async (userDatas) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -101,10 +101,32 @@ export const saveUserInfos = async (userDatas) => {
     throw error;
   }
 };
+export const editUserInfos = async (userDatas) => {
+  try {
+    const token = sessionStorage.getItem("token");
+
+    if (!token) {
+      throw new Error("Token not found");
+    }
+    const headers = {
+      "x-auth-token": token,
+    };
+    const response = await axiosInstance.post(
+      "/users/editUserInfos",
+      userDatas,
+      {
+        headers,
+      }
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getUserOrders = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -122,7 +144,7 @@ export const getUserOrders = async () => {
 
 export const updateButton = async (datas) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -140,7 +162,7 @@ export const updateButton = async (datas) => {
 };
 export const updateHeader = async (datas) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -158,7 +180,7 @@ export const updateHeader = async (datas) => {
 };
 export const updateFooter = async (datas) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -176,7 +198,7 @@ export const updateFooter = async (datas) => {
 };
 export const updateBody = async (datas) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -194,7 +216,7 @@ export const updateBody = async (datas) => {
 };
 export const updateTexts = async (datas) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");
@@ -212,7 +234,7 @@ export const updateTexts = async (datas) => {
 };
 export const uploadImage = async (datas) => {
   try {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
       throw new Error("Token not found");

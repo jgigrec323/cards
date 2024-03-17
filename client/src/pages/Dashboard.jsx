@@ -48,7 +48,7 @@ function Dashboard() {
     const logOut = () => {
         let logOut = window.confirm("Se deconnecter ?");
         if (logOut) {
-            localStorage.removeItem('token')
+            sessionStorage.removeItem('token')
             navigate("/login")
         }
     }
