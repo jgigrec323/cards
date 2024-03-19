@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import transition from '../js/transition';
 import { useAppContext } from '../components/AppContext';
 import EditComponent from '../components/EditComponent';
@@ -7,7 +7,7 @@ import { authenticateUserRoutes, getInfoByUsername, populateStyle, updateBody, u
 
 function Profile() {
     const { username } = useParams()
-    const { savedData, setSavedData, setIsCommandClicked, isCommandClicked, setUserInformations } = useAppContext();
+    const { setIsCommandClicked, isCommandClicked, setUserInformations } = useAppContext();
     const [editMode, setEditMode] = useState(false);
     const [userInfos, setUserInfos] = useState({})
     const [isUserLogged, setIsUserLogged] = useState(false)
@@ -231,6 +231,13 @@ function Profile() {
             <span style={buttonStyle} onClick={() => { setEditMode(!editMode); updateStyle() }} className='mdi mdi-pencil'></span>
         );
     };
+    const renderHomeButton = () => {
+
+        const buttonStyle = { background: styleObject.button.backgroundColor, color: styleObject.button.textColor }
+        return (
+            <Link to={"/"}><span style={buttonStyle} className='mdi mdi-home'></span></Link>
+        );
+    };
 
     const updateStyle = async () => {
         const { button_id, texts_id, header_id, footer_id, body_id } = userInfos;
@@ -268,6 +275,7 @@ function Profile() {
             {isFetching && <div>Loading...</div>}
 
             {renderEditButton()}
+            {renderHomeButton()}
         </main>
     );
 }

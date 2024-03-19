@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
-import { useNavigate } from 'react-router-dom'
-import { getUserById, getUserInfoById, getUserOrders } from '../routes/api'
+import { Link, useNavigate } from 'react-router-dom'
+import { getUserById, getUserInfoById, getUserOrders, protectedRoutes } from '../routes/api'
 import { toast, ToastContainer } from 'react-toastify'
 
 function Dashboard() {
@@ -24,7 +24,9 @@ function Dashboard() {
                     console.log(infos.data.message)
                 }
                 else {
+
                     setUserInfos(infos.data.userPerso)
+                    console.log(userInfos)
                 }
 
                 const orders = await getUserOrders()
@@ -45,6 +47,29 @@ function Dashboard() {
         fetchData()
     }, []);
 
+
+    useEffect(() => {
+        const token = sessionStorage.getItem("token");
+        const checkAuth = async () => {
+            try {
+                const auth = await protectedRoutes();
+                if (auth.data.status !== true) {
+                    navigate('/login')
+                }
+
+
+            } catch (error) {
+                throw error
+            }
+        };
+        if (token) {
+            checkAuth()
+        }
+        else {
+            navigate('/login')
+        }
+    }, [navigate])
+
     const logOut = () => {
         let logOut = window.confirm("Se deconnecter ?");
         if (logOut) {
@@ -63,17 +88,18 @@ function Dashboard() {
                         <div className="informations">
                             <h2>Informations personnelles :</h2>
                             {userInfos ? <ul>
-                                <li>Nom : </li>
-                                <li>Prénom : </li>
-                                <li>Fonction : </li>
-                                <li>Numéro de téléphone :</li>
-                                <li>Email : </li>
-                                <li>Bio : </li>
-                                <li>Image de profil : <img src={""} alt="Profile" /></li>
-                                <li>Fichier CV : <a href={""} target="_blank" rel="noopener noreferrer">Voir CV</a></li>
+                                <li>Nom : {userInfos.nom} </li>
+                                <li>Prénom : {userInfos.prenom} </li>
+                                <li>Fonction : {userInfos.fonction} </li>
+                                <li>Numéro de téléphone : {userInfos.phoneNumber}</li>
+                                <li>Email : {userInfos.email} </li>
+                                <li>Bio : {userInfos.bio} </li>
+                                <li>Image de profil : <a href={`${process.env.REACT_APP_BASE_URL}/uploads/${userInfos.profileImage}`} target="_blank" rel="noopener noreferrer">Voir image</a></li>
+                                <li>Fichier CV : <a href={`${process.env.REACT_APP_BASE_URL}/uploads/${userInfos.cvFile}`} target="_blank" rel="noopener noreferrer">Voir cv</a></li>
                             </ul> : <>
                                 <div>
                                     <p>Vous n'avez pas encore enregistré les informations de votre profil</p>
+                                    <Link to={'/personnalisation'}>Enregistrer mes informations</Link>
                                 </div>
                             </>}
                         </div>

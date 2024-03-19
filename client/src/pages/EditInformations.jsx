@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../components/AppContext';
 import { Link, useNavigate } from 'react-router-dom';
 import transition from '../js/transition';
-import { editUserInfos, saveUserInfos } from '../routes/api';
+import { editUserInfos, protectedRoutes, saveUserInfos } from '../routes/api';
 
 function EditInformations() {
     const { saveUserDatas, savedData, userInformations, user } = useAppContext();
@@ -219,13 +219,35 @@ function EditInformations() {
             Footer: { ...userInformations.Footer }
         }));
     }
-
     useEffect(() => {
-        if (savedData !== null) {
-            setFormData(savedData);
+        const token = sessionStorage.getItem("token");
+        const checkAuth = async () => {
+            try {
+                const auth = await protectedRoutes();
+
+                if (auth.data.status !== true) {
+                    navigate('/login')
+                }
+                else {
+                    if (savedData !== null) {
+                        setFormData(savedData);
+                    }
+                    populateForm()
+                }
+
+
+            } catch (error) {
+                throw error
+            }
+        };
+        if (token) {
+            checkAuth()
         }
-        populateForm()
-    }, [navigate, savedData]);
+        else {
+            navigate('/login')
+        }
+    }, [navigate])
+
 
 
     return (

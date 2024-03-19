@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 function ShoppingCart() {
     const { cartItems, updateItemQuantity, removeFromCart, cards, isCommandClicked, setIsCommandClicked, updateCartCount } = useAppContext();
-
     const formatPrice = (price) => {
         return price.toLocaleString('fr-FR', { minimumFractionDigits: 0 });
     };
@@ -22,6 +21,7 @@ function ShoppingCart() {
     };
 
     useEffect(() => {
+
         setIsCommandClicked(false);
         if (isCommandClicked) {
             window.document.body.style.overflowY = "hidden"

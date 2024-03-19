@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { useAppContext } from '../components/AppContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import transition from '../js/transition';
 import { saveUserInfos } from '../routes/api';
+import Navbar from '../components/Navbar';
 
 function Personnalisation() {
     const { saveUserDatas, savedData, user } = useAppContext();
+
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         nom: '',
@@ -149,167 +151,183 @@ function Personnalisation() {
         const response = saveUserInfos(formDatas)
         console.log(response)
     }
+
+    /*  useEffect(() => {
+         const checkAuth = async () => {
+             const auth = await protectedRoutes();
+             console.log(auth)
+             if (auth.data.status !== true) {
+                 location.state = { from: location.pathname }
+                 navigate("/login");
+             }
+         };
+         checkAuth()
+     }, [location.pathname, navigate]); */
     useEffect(() => {
+
         if (savedData !== null) {
 
             setFormData(savedData)
         }
     }, [navigate, savedData])
     return (
-        <div className="personnalisation">
-            <h1>Mes infos</h1>
-            <div>
-                <form>
-                    <div className="part1">
-                        <input
-                            type="text"
-                            name="nom"
-                            placeholder="Nom"
-                            value={formData.nom}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="text"
-                            name="prenom"
-                            placeholder="Prénom(s)"
-                            value={formData.prenom}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="text"
-                            name="fonction"
-                            placeholder="Fonction (facultatif)"
-                            value={formData.fonction}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="tel"
-                            name="phoneNumber"
-                            placeholder="Numéro de téléphone"
-                            value={formData.phoneNumber}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                        />
-                        <textarea
-                            name="bio"
-                            placeholder="Ecrivez quelque chose pour votre bio..."
-                            value={formData.bio}
-                            onChange={handleInputChange}
-                        ></textarea>
-                    </div>
-                    <div className="part2">
-                        <div className='fileDiv'>
-                            <label htmlFor="profileImage">Ajoutez votre image de profil :</label>
+        <>
+            <Navbar></Navbar>
+            <div className="personnalisation">
+                <h1>Mes infos</h1>
+                <div>
+                    <form>
+                        <div className="part1">
                             <input
-                                name='profileImage'
-                                type="file"
-                                id="profileImage"
-                                accept='image/*'
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        <div className='fileDiv'>
-                            <label htmlFor="cvFile">Ajoutez votre CV :</label>
-                            <input
-                                name='cvFile'
-                                type="file"
-                                id="cvFile"
-                                accept=".pdf"
+                                type="text"
+                                name="nom"
+                                placeholder="Nom"
+                                value={formData.nom}
                                 onChange={handleInputChange}
                             />
+                            <input
+                                type="text"
+                                name="prenom"
+                                placeholder="Prénom(s)"
+                                value={formData.prenom}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="fonction"
+                                placeholder="Fonction (facultatif)"
+                                value={formData.fonction}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="tel"
+                                name="phoneNumber"
+                                placeholder="Numéro de téléphone"
+                                value={formData.phoneNumber}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                            />
+                            <textarea
+                                name="bio"
+                                placeholder="Ecrivez quelque chose pour votre bio..."
+                                value={formData.bio}
+                                onChange={handleInputChange}
+                            ></textarea>
                         </div>
-
-                        <div className="socialMedia">
-                            <div className="fb">
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        name="facebook"
-                                        checked={formData.socialMedia.facebook.active}
-                                        onChange={handleInputChange}
-                                    />
-                                    Facebook
-                                </label>
-                                {formData.socialMedia.facebook.active && (
-                                    <input
-                                        type="text"
-                                        placeholder="Entrez votre nom d'utilisateur Facebook"
-                                        value={formData.socialMedia.facebook.username}
-                                        onChange={(e) => handleUsernameChange(e, 'facebook')}
-                                    />
-                                )}
+                        <div className="part2">
+                            <div className='fileDiv'>
+                                <label htmlFor="profileImage">Ajoutez votre image de profil :</label>
+                                <input
+                                    name='profileImage'
+                                    type="file"
+                                    id="profileImage"
+                                    accept='image/*'
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className='fileDiv'>
+                                <label htmlFor="cvFile">Ajoutez votre CV :</label>
+                                <input
+                                    name='cvFile'
+                                    type="file"
+                                    id="cvFile"
+                                    accept=".pdf"
+                                    onChange={handleInputChange}
+                                />
                             </div>
 
-                            <div>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        name="instagram"
-                                        checked={formData.socialMedia.instagram.active}
-                                        onChange={handleInputChange}
-                                    />
-                                    Instagram
-                                </label>
-                                {formData.socialMedia.instagram.active && (
-                                    <input
-                                        type="text"
-                                        placeholder="Entrez votre nom d'utilisateur Instagram"
-                                        value={formData.socialMedia.instagram.username}
-                                        onChange={(e) => handleUsernameChange(e, 'instagram')}
-                                    />
-                                )}
-                            </div>
-                            <div>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        name="twitter"
-                                        checked={formData.socialMedia.twitter.active}
-                                        onChange={handleInputChange}
-                                    />
-                                    Twitter
-                                </label>
-                                {formData.socialMedia.twitter.active && (
-                                    <input
-                                        type="text"
-                                        placeholder="Entrez votre nom d'utilisateur Twitter"
-                                        value={formData.socialMedia.twitter.username}
-                                        onChange={(e) => handleUsernameChange(e, 'twitter')}
-                                    />
-                                )}
-                            </div>
-                            <div>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        name="whatsapp"
-                                        checked={formData.socialMedia.whatsapp.active}
-                                        onChange={handleInputChange}
-                                    />
-                                    Whatsapp
-                                </label>
-                                {formData.socialMedia.whatsapp.active && (
-                                    <input
-                                        type="text"
-                                        placeholder="Entrez votre numéro Whatsapp"
-                                        value={formData.socialMedia.whatsapp.username}
-                                        onChange={(e) => handleUsernameChange(e, 'whatsapp')}
-                                    />
-                                )}
+                            <div className="socialMedia">
+                                <div className="fb">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="facebook"
+                                            checked={formData.socialMedia.facebook.active}
+                                            onChange={handleInputChange}
+                                        />
+                                        Facebook
+                                    </label>
+                                    {formData.socialMedia.facebook.active && (
+                                        <input
+                                            type="text"
+                                            placeholder="Entrez votre nom d'utilisateur Facebook"
+                                            value={formData.socialMedia.facebook.username}
+                                            onChange={(e) => handleUsernameChange(e, 'facebook')}
+                                        />
+                                    )}
+                                </div>
+
+                                <div>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="instagram"
+                                            checked={formData.socialMedia.instagram.active}
+                                            onChange={handleInputChange}
+                                        />
+                                        Instagram
+                                    </label>
+                                    {formData.socialMedia.instagram.active && (
+                                        <input
+                                            type="text"
+                                            placeholder="Entrez votre nom d'utilisateur Instagram"
+                                            value={formData.socialMedia.instagram.username}
+                                            onChange={(e) => handleUsernameChange(e, 'instagram')}
+                                        />
+                                    )}
+                                </div>
+                                <div>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="twitter"
+                                            checked={formData.socialMedia.twitter.active}
+                                            onChange={handleInputChange}
+                                        />
+                                        Twitter
+                                    </label>
+                                    {formData.socialMedia.twitter.active && (
+                                        <input
+                                            type="text"
+                                            placeholder="Entrez votre nom d'utilisateur Twitter"
+                                            value={formData.socialMedia.twitter.username}
+                                            onChange={(e) => handleUsernameChange(e, 'twitter')}
+                                        />
+                                    )}
+                                </div>
+                                <div>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="whatsapp"
+                                            checked={formData.socialMedia.whatsapp.active}
+                                            onChange={handleInputChange}
+                                        />
+                                        Whatsapp
+                                    </label>
+                                    {formData.socialMedia.whatsapp.active && (
+                                        <input
+                                            type="text"
+                                            placeholder="Entrez votre numéro Whatsapp"
+                                            value={formData.socialMedia.whatsapp.username}
+                                            onChange={(e) => handleUsernameChange(e, 'whatsapp')}
+                                        />
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
-                <button className="Btn" onClick={handleSave}>Voir mon profile</button>
+                    </form>
+                    <button className="Btn" onClick={handleSave}>Voir mon profile</button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

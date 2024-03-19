@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '../components/Navbar';
@@ -12,10 +12,13 @@ import { useGSAP } from '@gsap/react';
 import Commande from '../components/Commande';
 import { useAppContext } from '../components/AppContext';
 import { moving } from '../js/mouse'
+import { AuthContext } from '../components/AuthContext';
 
 function Accueil() {
     const { cards, isCommandClicked, setIsCommandClicked } = useAppContext();
+    const { authenticate } = useContext(AuthContext);
     useEffect(() => {
+
         moving()
 
         if (isCommandClicked) {

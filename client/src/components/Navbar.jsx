@@ -4,12 +4,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import CartIcon from './CartIcon';
 import { useAppContext } from './AppContext';
+import { getUserById } from '../routes/api';
 
 function Navbar() {
     const ref = useRef([])
     const [token, setToken] = useState(null)
     const pushRef = (el) => ref.current.push(el);
-    const { user } = useAppContext();
+    const { user, setUser } = useAppContext();
 
     useGSAP(() => {
 
@@ -24,9 +25,24 @@ function Navbar() {
             })
         });
     }, [])
-    useEffect(() => {
+    const fetchuser = async () => {
         const token = sessionStorage.getItem('token');
         setToken(token)
+        if (token) {
+            try {
+                const response = await getUserById()
+                if (response.data.status) {
+                    setUser(response.data.username)
+                }
+            } catch (error) {
+                throw error
+            }
+        }
+
+    }
+    useEffect(() => {
+        fetchuser()
+
     }, [])
     return (
         <nav>
@@ -41,7 +57,6 @@ function Navbar() {
                 <CartIcon ref={(el) => pushRef(el)}></CartIcon>
                 {token ? (
                     <>
-
                         <button className="Btn ctaBtn">
                             <Link to={`/${user}`}>Mon profile</Link>
                         </button></>

@@ -28,7 +28,7 @@ export const getUserById = async () => {
     const token = sessionStorage.getItem("token");
 
     if (!token) {
-      throw new Error("Token not found");
+      window.location.href = window.location.origin + "/login";
     }
     const headers = {
       "x-auth-token": token,
@@ -77,6 +77,22 @@ export const authenticateUserRoutes = async (username) => {
       "x-auth-token": token,
     };
     const response = await axiosInstance.get(`/users/${username}`, { headers });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const protectedRoutes = async () => {
+  try {
+    const token = sessionStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = window.location.origin + "/login";
+    }
+    const headers = {
+      "x-auth-token": token,
+    };
+    const response = await axiosInstance.get(`/users/protected`, { headers });
     return response;
   } catch (error) {
     throw error;

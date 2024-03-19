@@ -1,16 +1,20 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import transition from '../js/transition'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import { loginUser } from '../routes/api'
 import { useAppContext } from '../components/AppContext'
+import { AuthContext } from '../components/AuthContext'
 function Login() {
     const navigate = useNavigate()
+    const location = useLocation()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [isFetching, setIsFetching] = useState(false)
+    const { authenticate } = useContext(AuthContext);
+
 
     const { setUser } = useAppContext();
 
@@ -46,7 +50,11 @@ function Login() {
                 setUser(response.data.username)
                 toast.success("Connexion réussie !");
 
-                navigate('/dashboard');
+                await authenticate()
+
+                const redirectPath = location.state?.from || '/dashboard'; // Check for state
+                navigate(redirectPath);
+
             }
             else {
                 toast.error(response.data.message);
@@ -61,6 +69,7 @@ function Login() {
 
 
     }
+
     return (
         <>
             <Navbar></Navbar>

@@ -110,4 +110,22 @@ main.profilePage {
     right: 5%;
     cursor: pointer;
   }
+  & .mdi-home {
+    display: block;
+    height: 50px;
+    width: 50px;
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $white-color;
+    background: $black-color;
+    border-radius: 50%;
+    font-size: 2.5rem;
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    cursor: pointer;
+  }
 }
